@@ -1,0 +1,82 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - rabbitmq-data:/data/rabbitmq
+    networks:
+      - my-network
+
+  mongodb:
+    image: mongo:6.0 
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-network
+
+  user:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - PORT=3000
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - my-network
+
+  chat:
+    build: 
+      context: ./chat-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - PORT=3001
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - my-network
+
+  notification:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - mongodb
+    environment:
+      - PORT=3002
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - my-network
+
+volumes:
+  mongo-data:
+  rabbitmq-data:
+
+networks:
+  my-network:
+    driver: bridge

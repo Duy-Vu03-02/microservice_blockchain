@@ -1,0 +1,97 @@
+version: "3.8"
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.id == r6wso1zkp62yp96x4clj1mwvr
+    volumes:
+      - rabbitmq-data:/data/rabbitmq
+    networks:
+      - my-network
+
+  mongodb:
+    image: mongo:6.0 
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.id == r6wso1zkp62yp96x4clj1mwvr
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - my-network
+
+  user:
+    image: vu0203/node-microservice-user
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.id == r6wso1zkp62yp96x4clj1mwvr
+    networks:
+      - my-network
+
+  chat:
+    image: vu0203/node-microservice-chat
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    environment:
+      - PORT=3001
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.id == r6wso1zkp62yp96x4clj1mwvr
+    networks:
+      - my-network
+
+  notification:
+    image: vu0203/node-microservice-notification
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+    environment:
+      - PORT=3002
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == worker
+          - node.id == r6wso1zkp62yp96x4clj1mwvr
+    networks:
+      - my-network
+      
+volumes:
+  mongo-data:
+  rabbitmq-data:
+
+networks:
+  my-network:
+     driver: overlay
