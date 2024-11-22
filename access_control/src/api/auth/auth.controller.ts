@@ -23,7 +23,6 @@ export class AuthController {
         }
       }
 
-      console.log("docker ps -a -q docker-compose up build docker-compose");
       throw new APIError({
         status: ErrorCode.AUTH_ACCOUNT_BLOCKED,
         errorCode: ErrorCode.AUTH_ACCOUNT_BLOCKED,

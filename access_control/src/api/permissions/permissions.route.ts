@@ -5,6 +5,8 @@ import { PermissionController } from "./permissions.controller";
 
 const router = express.Router();
 
+router.post("/create", PermissionController.create);
+
 router.post(
   "/change",
   AuthMiddleware.loginByToken,

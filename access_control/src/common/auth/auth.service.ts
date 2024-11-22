@@ -63,7 +63,9 @@ export class AuthService {
     try {
       if (user && API_KEY) {
         // token vv
-        const token = jwt.sign(user, API_KEY);
+        const token = jwt.sign(user, API_KEY, {
+          expiresIn: "30d",
+        });
         if (token && token.trim() !== "") {
           return token;
         }

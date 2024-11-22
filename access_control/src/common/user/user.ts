@@ -12,6 +12,13 @@ export interface IUser extends Document {
   transform(): IUserReponse;
 }
 
+export interface IUserRegister {
+  account: string;
+  name: string;
+  password: string;
+  role: UserRole;
+}
+
 export interface IUserReponse {
   id: string;
   name: string;
@@ -30,7 +37,7 @@ UserSchema.method({
     const tranfomed: IUserReponse = {
       id: this._id.toHexString(),
       name: this.name ?? undefined,
-      role: this.tole ?? undefined,
+      role: this.role ?? undefined,
     };
     return tranfomed;
   },
