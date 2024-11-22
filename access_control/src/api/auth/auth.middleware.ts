@@ -24,7 +24,6 @@ export class AuthMiddleware {
       req.user = user;
       next();
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

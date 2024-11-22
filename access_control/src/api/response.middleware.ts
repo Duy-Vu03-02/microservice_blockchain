@@ -24,7 +24,7 @@ export class ResponseMiddleware {
 
     const response = {
       error_code: errorCode,
-      message: err.message ? err.message : ErrorCode[status],
+      message: err.message ?? "",
       stack: err.stack,
       errors: err.errors,
     };
@@ -34,12 +34,18 @@ export class ResponseMiddleware {
       delete response.errors;
     }
 
-    res.status(status);
     res.json(response);
+    res.status(status);
     res.end();
-    return;
   }
 
+  /**
+   * Convert error if it's not APIError
+   * @param err
+   * @param req
+   * @param res
+   * @param next
+   */
   static converter(
     err: Error,
     req: Request,

@@ -12,6 +12,6 @@ router.post(
   AuthController.loginToken
 );
 
-router.post("/logout", AuthMiddleware.login, AuthController.logOut);
+router.get("/logout", AuthController.logOut);
 
 export default router;

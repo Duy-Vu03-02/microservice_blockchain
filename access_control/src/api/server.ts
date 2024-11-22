@@ -1,8 +1,9 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import { Server } from "http";
 import helmet from "helmet";
 import routes from "@api/router";
 import { ResponseMiddleware } from "@api/response.middleware";
+import { APIError } from "@common/error/api.error";
 
 express.response.sendJson = function (data: object) {
   return this.json({ error_code: 0, message: "OK", ...data });
@@ -15,7 +16,7 @@ export class ExpressServer {
   public async setup(port: number): Promise<Express> {
     const server = express();
     this.setupStandardMiddlewares(server);
-    this.setupSecurityMiddlewares(server);
+    // this.setupSecurityMiddlewares(server);
     this.configureRoutes(server);
     this.setupErrorHandlers(server);
 
@@ -74,7 +75,7 @@ export class ExpressServer {
     // catch 404 and forward to error handler
     server.use(ResponseMiddleware.notFound);
 
-    // error handler, send stacktrace only during development
+    // // error handler, send stacktrace only during development
     server.use(ResponseMiddleware.handler);
   }
 }

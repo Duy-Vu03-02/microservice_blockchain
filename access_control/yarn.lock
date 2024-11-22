@@ -1430,7 +1430,7 @@ http-errors@2.0.0, http-errors@^2.0.0:
 
 http-status@^2.0.0:
   version "2.0.0"
-  resolved "https://registry.npmjs.org/http-status/-/http-status-2.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/http-status/-/http-status-2.0.0.tgz#083f4606f42aea2881405656093f2290372aae21"
   integrity sha512-fmtDiMjseYigum9OwVYJD2RD6tRYV4tzRrT92/aLSOS2bNPvz3jx8aHFqJ4Nq4ZLydalwuyh2Q6VuHg7qbCbJQ==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
