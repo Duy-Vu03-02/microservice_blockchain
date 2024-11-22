@@ -34,7 +34,7 @@ export class AuthService {
 
     try {
       if (token) {
-        const verify = AuthService.verifyToken(token);
+        const verify = await AuthService.verifyToken(token);
 
         if (verify) {
           const payloadBase64 = token.split(".")[1];

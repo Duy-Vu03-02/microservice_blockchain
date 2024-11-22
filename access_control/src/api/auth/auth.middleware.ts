@@ -32,12 +32,14 @@ export class AuthMiddleware {
     req: Request,
     res: Response,
     next: NextFunction
-  ) => {
+  ): Promise<void> => {
     try {
       const user = await AuthService.loginByToken(req);
 
       if (user) {
         req.user = user;
+        next();
+        return;
       }
 
       throw new APIError({

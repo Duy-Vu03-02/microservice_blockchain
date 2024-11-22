@@ -14,16 +14,28 @@ import { EventRegister } from "@common/event/event";
 export class PermissionService {
   public static create = async (req: IUserRegister): Promise<IUserReponse> => {
     const { name, account, password, role } = req;
-    if (name && account && password) {
-      const user = await UserModel.create({
-        name: name,
-        account: account,
-        password: password,
-        role: UserRole.USER,
-      });
+    if (account) {
+      const old_user = await UserModel.findOne({ account: account });
 
-      if (user) {
-        return user.transform();
+      if (old_user) {
+        throw new APIError({
+          status: ErrorCode.AUTH_ACCOUNT_NOT_FOUND,
+          errorCode: ErrorCode.AUTH_ACCOUNT_NOT_FOUND,
+          message: "Tai khoan da ton tai",
+        });
+      } else {
+        if (name && password) {
+          const user = await UserModel.create({
+            name: name,
+            account: account,
+            password: password,
+            role: UserRole.USER,
+          });
+
+          if (user) {
+            return user.transform();
+          }
+        }
       }
     }
 
@@ -39,24 +51,31 @@ export class PermissionService {
     user: IPermissionRequest
   ): Promise<IUserReponse> => {
     if (req && user) {
-      if (req.role !== UserRole.PATIENT && req.role !== UserRole.USER) {
-        const user_update = await UserModel.findByIdAndUpdate(
-          user.user_id,
-          {
-            role: user.role,
-          },
-          { new: true }
-        );
+      if (
+        req.role === UserRole.SYS ||
+        req.role === UserRole.BHYT ||
+        req.role === UserRole.DOCTOR
+      ) {
+        if (Object.values(UserRole).includes(user.role)) {
+          const user_update = await UserModel.findByIdAndUpdate(
+            user.user_id,
+            {
+              role: user.role,
+            },
+            { new: true }
+          );
 
-        if (user_update) {
-          eventbus.emit(EventRegister.EVENT_CHANGE_PERMISSION, {
-            admin_id: req.id,
-            admin_name: req.name,
-            role: user.role,
-            user_id: user.user_id,
-            user_name: user_update.name,
-          } as IAuditLog);
-          return user_update.transform();
+          if (user_update) {
+            eventbus.emit(EventRegister.EVENT_CHANGE_PERMISSION, {
+              admin_id: req.id,
+              admin_name: req.name,
+              role: user.role,
+              user_id: user.user_id,
+              user_name: user_update.name,
+            } as IAuditLog);
+
+            return user_update.transform();
+          }
         }
       }
     }
@@ -73,11 +92,15 @@ export class PermissionService {
     user: IPermissionRequest
   ): Promise<IUserReponse> => {
     if (req && user) {
-      if (req.role !== UserRole.USER && req.role !== UserRole.PATIENT) {
+      if (
+        req.role === UserRole.SYS ||
+        req.role === UserRole.BHYT ||
+        req.role === UserRole.DOCTOR
+      ) {
         const user_update = await UserModel.findByIdAndUpdate(
           user.user_id,
           {
-            role: user.role,
+            role: UserRole.USER,
           },
           { new: true }
         );
