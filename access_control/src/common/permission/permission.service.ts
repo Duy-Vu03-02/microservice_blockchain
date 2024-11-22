@@ -1,4 +1,4 @@
-import { IAuditLog, IPermissionRequest } from "@api/permissions/permission";
+import { IAuditLog, IPermissionRequest } from "./permission";
 import { IAuthUser, UserRole } from "@common/auth/auth";
 import { APIError } from "@common/error/api.error";
 import { IUserReponse, UserModel } from "@common/user/user";

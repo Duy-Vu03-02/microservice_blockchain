@@ -7,7 +7,7 @@ import { RabbitMQAdapter } from "@common/infrastructure/rabbitmq.adapter";
 
 export class Application {
   public static async createApplication(): Promise<ExpressServer> {
-    // await DatabaseAdapter.connect();
+    await DatabaseAdapter.connect();
     // await RedisAdapter.connect();
     // await RabbitMQAdapter.connect();
 

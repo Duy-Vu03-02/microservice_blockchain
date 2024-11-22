@@ -1,4 +1,4 @@
-import { IAuditLog, IPermissionRequest } from "@api/permissions/permission";
+import { IAuditLog, IPermissionRequest } from "@common/permission/permission";
 import eventbus from "@common/event";
 import { RabbitMQAdapter } from "@common/infrastructure/rabbitmq.adapter";
 

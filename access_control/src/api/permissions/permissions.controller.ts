@@ -1,7 +1,6 @@
 import { PermissionService } from "@common/permission/permission.service";
-import { UserModel } from "@common/user/user";
 import express, { Request, Response, NextFunction } from "express";
-import { IPermissionRequest } from "./permission";
+import { IPermissionRequest } from "@common/permission/permission";
 import { APIError } from "@common/error/api.error";
 import { ErrorCode } from "@config/errors";
 

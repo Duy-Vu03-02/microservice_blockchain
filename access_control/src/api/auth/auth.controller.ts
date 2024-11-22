@@ -1,3 +1,4 @@
+import { AuthService } from "@common/auth/auth.service";
 import { APIError } from "@common/error/api.error";
 import { ErrorCode } from "@config/errors";
 import express, { NextFunction, Response, Request } from "express";
@@ -10,10 +11,16 @@ export class AuthController {
   ): Promise<void> => {
     try {
       if (req.user) {
-        res.sendJson({
-          data: req.user,
-        });
-        return;
+        const token = await AuthService.genToken(req.user);
+        if (token) {
+          res.sendJson({
+            data: {
+              user: req.user,
+              token: token,
+            },
+          });
+          return;
+        }
       }
 
       throw new APIError({

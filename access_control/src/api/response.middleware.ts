@@ -33,18 +33,13 @@ export class ResponseMiddleware {
       delete response.stack;
       delete response.errors;
     }
+
     res.status(status);
     res.json(response);
     res.end();
+    return;
   }
 
-  /**
-   * Convert error if it's not APIError
-   * @param err
-   * @param req
-   * @param res
-   * @param next
-   */
   static converter(
     err: Error,
     req: Request,

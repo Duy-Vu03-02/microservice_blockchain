@@ -3,6 +3,8 @@ import { IUser, IUserReponse, UserModel } from "@common/user/user";
 import { ErrorCode } from "@config/errors";
 import { ILoginRequest } from "./auth";
 import { Request } from "express";
+import jwt from "jsonwebtoken";
+import { API_KEY } from "@config/environment";
 
 export class AuthService {
   public static login = async (req: ILoginRequest): Promise<IUserReponse> => {
@@ -31,22 +33,60 @@ export class AuthService {
     const token = req.header(HEADER_AUTH);
 
     try {
-      const payload = JSON.parse(
-        Buffer.from(token, "base64").toString("utf-8")
-      );
+      if (token) {
+        const verify = AuthService.verifyToken(token);
 
-      if (payload) {
-        const user = {
-          id: payload.id ?? undefined,
-          role: payload.role ?? undefined,
-          name: payload.name ?? undefined,
-        };
-        return user;
+        if (verify) {
+          const payloadBase64 = token.split(".")[1];
+          const payload: IUserReponse = JSON.parse(
+            Buffer.from(payloadBase64, "base64").toString("utf-8")
+          );
+
+          if (payload) {
+            const user: IUserReponse = {
+              id: payload.id ?? undefined,
+              role: payload.role ?? undefined,
+              name: payload.name ?? undefined,
+            };
+
+            return user;
+          }
+        }
       }
-
       return null;
     } catch (err) {
       return null;
+    }
+  };
+
+  public static genToken = async (user: IUserReponse): Promise<unknown> => {
+    try {
+      if (user && API_KEY) {
+        // token vv
+        const token = jwt.sign(user, API_KEY);
+        if (token && token.trim() !== "") {
+          return token;
+        }
+      }
+      return null;
+    } catch (err) {
+      return null;
+    }
+  };
+
+  public static verifyToken = async (token: string): Promise<boolean> => {
+    try {
+      if (token && token.trim() !== "") {
+        const verify = jwt.verify(token, API_KEY);
+
+        if (verify) {
+          return true;
+        }
+      }
+
+      return false;
+    } catch (err) {
+      return false;
     }
   };
 }
