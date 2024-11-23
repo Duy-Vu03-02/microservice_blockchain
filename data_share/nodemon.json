@@ -1,5 +1,10 @@
 {
-    "watch": ["src"],
-    "ext": ".ts,.js",
-    "exec": "ts-node ./src/index.ts"
-  }
+  "delay": "0",
+  "execMap": {
+    "ts": "node -r ts-node/register -r tsconfig-paths/register"
+  },
+  "events": {
+    "start": "tslint -c ./tslint.json -t stylish 'src/**/*.ts'"
+  },
+  "ignore": ["node_modules/*", "dist/*"]
+}
