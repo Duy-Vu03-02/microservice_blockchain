@@ -1,9 +1,9 @@
-import { Application } from "@api/application";
+import { Application } from './consumers/application';
 
 Application.createApplication()
-  .then(() => {
-    console.log("Service PERMISSION start SUCCESS!!!");
-  })
-  .catch((err) => {
-    console.error("Service PERMISSION start FAILD: ", err.message);
-  });
+    .then(() => {
+        console.log('Service AUDIT LOG start SUCCESS!!!');
+    })
+    .catch((err) => {
+        console.error('Service AUDIT LOG start FAILD: ', err.message);
+    });

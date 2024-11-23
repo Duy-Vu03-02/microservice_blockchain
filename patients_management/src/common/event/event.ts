@@ -27,7 +27,12 @@ export class EventRegister {
             await channel.publish(
                 RabbitMQAdapter.nameExchange,
                 RabbitMQAdapter.responseQueue,
-                Buffer.from(JSON.stringify(data)),
+                Buffer.from(
+                    JSON.stringify({
+                        ...data,
+                        action: 'create patient',
+                    }),
+                ),
             );
         }
     };
@@ -44,7 +49,12 @@ export class EventRegister {
             await channel.publish(
                 RabbitMQAdapter.nameExchange,
                 RabbitMQAdapter.responseQueue,
-                Buffer.from(JSON.stringify(data)),
+                Buffer.from(
+                    JSON.stringify({
+                        ...data,
+                        action: 'update patient',
+                    }),
+                ),
             );
         }
     };
@@ -62,7 +72,12 @@ export class EventRegister {
                 await channel.publish(
                     RabbitMQAdapter.nameExchange,
                     RabbitMQAdapter.responseQueue,
-                    Buffer.from(JSON.stringify(data)),
+                    Buffer.from(
+                        JSON.stringify({
+                            ...data,
+                            action: 'add history patient',
+                        }),
+                    ),
                 );
             }
         } catch (err) {
@@ -83,7 +98,12 @@ export class EventRegister {
                 await channel.publish(
                     RabbitMQAdapter.nameExchange,
                     RabbitMQAdapter.responseQueue,
-                    Buffer.from(JSON.stringify(data)),
+                    Buffer.from(
+                        JSON.stringify({
+                            ...data,
+                            action: 'delete patient',
+                        }),
+                    ),
                 );
             }
         } catch (err) {

@@ -1,34 +1,71 @@
-import { URL_RABBITMQ } from "@config/environment";
-import amqplib, { Channel, Connection } from "amqplib";
+import amqplib, { Options, Channel, Connection } from 'amqplib';
+import { URL_RABBITMQ } from '@config/environment';
+import { logger } from './logger';
 
 export class RabbitMQAdapter {
-  private static conn: Connection;
-  private static channel: Channel;
-  public static nameExchange: string = "exchange_microservice";
-  public static responseQueue: string = "permission";
+    private static channel: Channel;
+    private static conn: Connection;
 
-  public static connect = async (): Promise<void> => {
-    try {
-      const conn = await amqplib.connect(URL_RABBITMQ);
-      const channel = await conn.createChannel();
+    public static connect = async (): Promise<Connection> => {
+        try {
+            if (!RabbitMQAdapter.conn) {
+                RabbitMQAdapter.conn = await amqplib.connect(URL_RABBITMQ);
+            }
+            return RabbitMQAdapter.conn;
+        } catch (err) {
+            console.error('MQTT connect FAILD: ', err);
+            process.exit(1);
+        }
+    };
 
-      RabbitMQAdapter.conn = conn;
-      RabbitMQAdapter.channel = channel;
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    private static getChanel = async (): Promise<Channel> => {
+        try {
+            if (!RabbitMQAdapter.channel) {
+                RabbitMQAdapter.channel = await (await RabbitMQAdapter.connect()).createChannel();
+            }
 
-  public static getChanel = async (): Promise<Channel> => {
-    try {
-      if (!RabbitMQAdapter.channel) {
-        await RabbitMQAdapter.connect();
-      }
+            return RabbitMQAdapter.channel;
+        } catch (err) {
+            console.error('MQTT: GET Channel FAILD: ', err);
+        }
+    };
 
-      return RabbitMQAdapter.channel;
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  };
+    public static closeRabbitMQ = async () => {
+        try {
+            if (RabbitMQAdapter.channel) {
+                await RabbitMQAdapter.channel.close();
+            }
+            if (RabbitMQAdapter.conn) {
+                await RabbitMQAdapter.conn.close();
+            }
+        } catch (err) {
+            console.error('Cannot close RabbitMQ: ', err);
+        }
+    };
+
+    public static subscribeTopic = async (exchange: string, topic: string, callback: (mesage: string) => void) => {
+        try {
+            await (
+                await RabbitMQAdapter.getChanel()
+            ).assertExchange(exchange, 'topic', {
+                durable: false,
+            });
+
+            const { queue } = await (await RabbitMQAdapter.getChanel()).assertQueue('', { exclusive: false });
+
+            await (await RabbitMQAdapter.getChanel()).bindQueue(queue, exchange, topic);
+
+            logger.info('Subscribe TOPIC ', topic, ' SUCCESS');
+
+            (await RabbitMQAdapter.getChanel()).consume(queue, (message) => {
+                if (message) {
+                    const content = message.content.toString();
+                    callback(JSON.parse(content));
+                    RabbitMQAdapter.channel.ack(message);
+                }
+            });
+        } catch (err) {
+            logger.info('Khong the subsribe topic: ', topic, ' :', err);
+        }
+    };
 }
