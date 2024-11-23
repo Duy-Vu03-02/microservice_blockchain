@@ -2,8 +2,8 @@ import { Application } from "@api/application";
 
 Application.createApplication()
   .then(() => {
-    console.log("Service PERMISSION start SUCCESS!!!");
+    console.log("Service ACCESS CONTROL start SUCCESS!!!");
   })
   .catch((err) => {
-    console.error("Service PERMISSION start FAILD: ", err.message);
+    console.error("Service ACCESS CONTROL start FAILD: ", err.message);
   });

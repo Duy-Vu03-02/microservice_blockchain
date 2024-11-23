@@ -21,12 +21,11 @@ export class EventRegister {
         if (channel) {
             await channel.assertExchange(RabbitMQAdapter.nameExchange, 'topic', {
                 durable: false,
-                autoDelete: true,
             });
 
-            await channel.publish(
+            channel.publish(
                 RabbitMQAdapter.nameExchange,
-                RabbitMQAdapter.responseQueue,
+                RabbitMQAdapter.routingKey,
                 Buffer.from(
                     JSON.stringify({
                         ...data,
@@ -46,9 +45,9 @@ export class EventRegister {
                 autoDelete: true,
             });
 
-            await channel.publish(
+            channel.publish(
                 RabbitMQAdapter.nameExchange,
-                RabbitMQAdapter.responseQueue,
+                RabbitMQAdapter.routingKey,
                 Buffer.from(
                     JSON.stringify({
                         ...data,
@@ -69,9 +68,9 @@ export class EventRegister {
                     autoDelete: true,
                 });
 
-                await channel.publish(
+                channel.publish(
                     RabbitMQAdapter.nameExchange,
-                    RabbitMQAdapter.responseQueue,
+                    RabbitMQAdapter.routingKey,
                     Buffer.from(
                         JSON.stringify({
                             ...data,
@@ -95,9 +94,9 @@ export class EventRegister {
                     autoDelete: true,
                 });
 
-                await channel.publish(
+                channel.publish(
                     RabbitMQAdapter.nameExchange,
-                    RabbitMQAdapter.responseQueue,
+                    RabbitMQAdapter.routingKey,
                     Buffer.from(
                         JSON.stringify({
                             ...data,

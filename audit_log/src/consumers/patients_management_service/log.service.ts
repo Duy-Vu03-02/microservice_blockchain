@@ -5,14 +5,30 @@ export class PatientManagementLLog {
     private static nameService: string = 'patient-service';
     private static logger = createLogger(PatientManagementLLog.nameService);
     private static nameExchange: string = 'exchange_microservice';
-    private static responseQueue: string = PatientManagementLLog.nameService;
+    private static routingKey: string = 'patient_management';
 
     public static register = async () => {
         await RabbitMQAdapter.subscribeTopic(
             PatientManagementLLog.nameExchange,
-            PatientManagementLLog.responseQueue,
-            (data) => {
-                console.log(data);
+            PatientManagementLLog.routingKey,
+            (data: any) => {
+                const logInfor =
+                    'ADMIN co id = ' +
+                    data.admin_id +
+                    ' - co ten = ' +
+                    "'" +
+                    data.admin_name +
+                    "'" +
+                    ' - ACTION : ' +
+                    data.action +
+                    ' cho user co id = ' +
+                    data.user_id +
+                    ' - co ten = ' +
+                    "'" +
+                    data.user_name +
+                    "'";
+                console.log(logInfor);
+                PatientManagementLLog.logger.info(logInfor);
             },
         );
     };

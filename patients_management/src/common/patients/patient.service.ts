@@ -18,7 +18,13 @@ export class PatientsService {
                 });
 
                 if (patients) {
-                    eventbus.emit(EventRegister.EVENT_CREATE_PATIENT);
+                    eventbus.emit(EventRegister.EVENT_CREATE_PATIENT, {
+                        admin_id: user.id,
+                        admin_name: user.name,
+                        user_id: patients._id,
+                        user_name: patients.name,
+                        action: "create patients"
+                    });
                     return patients.transform();
                 }
             }
@@ -76,7 +82,13 @@ export class PatientsService {
             );
 
             if (patients) {
-                eventbus.emit(EventRegister.EVENT_UPDATE_PATIENT);
+                eventbus.emit(EventRegister.EVENT_UPDATE_PATIENT, {
+                    admin_id: user.id,
+                    admin_name: user.name,
+                    user_id: patients._id,
+                    user_name : patients.name,
+                    action: "update patients"
+                });
                 return patients.transform();
             }
         }
@@ -93,6 +105,13 @@ export class PatientsService {
             const deleted = await PatientsModel.findByIdAndDelete(req.id);
 
             if (deleted) {
+                eventbus.emit(EventRegister.EVENT_DELETE_PATIENT, {
+                    admin_id: user.id,
+                    admin_name: user.name,
+                    user_id: req.id,
+                    user_name: deleted.name ?? undefined,
+                    action: "delete patients"
+                })
                 return true;
             }
         }
@@ -119,7 +138,13 @@ export class PatientsService {
             );
 
             if (patient) {
-                eventbus.emit(EventRegister.EVENT_UPDATE_PATIENT);
+                eventbus.emit(EventRegister.EVENT_UPDATE_PATIENT, {
+                    admin_id: user.id,
+                    admin_name : user.name,
+                    user_id : patient._id,
+                    user_name: patient.name,
+                    action : "update history patient"
+                });
                 return patient.transform();
             }
         }

@@ -7,14 +7,28 @@ export class RabbitMQAdapter {
     private static conn: Connection;
 
     public static connect = async (): Promise<Connection> => {
-        try {
-            if (!RabbitMQAdapter.conn) {
-                RabbitMQAdapter.conn = await amqplib.connect(URL_RABBITMQ);
+        const maxRetries = 5;
+        const retryDelay = 5000;
+        let retries = 0;
+
+        while (retries < maxRetries) {
+            try {
+                if (!RabbitMQAdapter.conn) {
+                    RabbitMQAdapter.conn = await amqplib.connect(URL_RABBITMQ);
+                }
+
+                return RabbitMQAdapter.conn;
+            } catch (err) {
+                retries++;
+                console.error(
+                    `Failed to connect to RabbitMQ. Attempt ${retries}/${maxRetries}`,
+                    err
+                );
+                if (retries >= maxRetries) {
+                    console.error('Max retries reached. Exiting...');
+                    process.exit(1);                }
+                await new Promise((resolve) => setTimeout(resolve, retryDelay));
             }
-            return RabbitMQAdapter.conn;
-        } catch (err) {
-            console.error('MQTT connect FAILD: ', err);
-            process.exit(1);
         }
     };
 
@@ -55,8 +69,9 @@ export class RabbitMQAdapter {
 
             await (await RabbitMQAdapter.getChanel()).bindQueue(queue, exchange, topic);
 
-            logger.info('Subscribe TOPIC ', topic, ' SUCCESS');
-
+            logger.info(`Subscribe TOPIC ${topic} SUCCESS`);
+            
+            
             (await RabbitMQAdapter.getChanel()).consume(queue, (message) => {
                 if (message) {
                     const content = message.content.toString();
@@ -65,7 +80,7 @@ export class RabbitMQAdapter {
                 }
             });
         } catch (err) {
-            logger.info('Khong the subsribe topic: ', topic, ' :', err);
+            logger.info(`Khong the subsribe topic: ${topic} : ${err}`);
         }
     };
 }

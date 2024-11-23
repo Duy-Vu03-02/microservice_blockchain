@@ -12,16 +12,15 @@ export class EventRegister {
     private static handleChangePermission = async (data: IAuditLog) => {
         try {
             const channel = await RabbitMQAdapter.getChanel();
-
+            
             if (channel) {
                 await channel.assertExchange(RabbitMQAdapter.nameExchange, 'topic', {
                     durable: false,
-                    autoDelete: true,
                 });
 
-                await channel.publish(
+                channel.publish(
                     RabbitMQAdapter.nameExchange,
-                    RabbitMQAdapter.responseQueue,
+                    RabbitMQAdapter.routingKey,
                     Buffer.from(
                         JSON.stringify({
                             ...data,

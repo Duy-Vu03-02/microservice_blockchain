@@ -5,24 +5,38 @@ export class RabbitMQAdapter {
     private static conn: Connection;
     private static channel: Channel;
     public static nameExchange: string = 'exchange_microservice';
-    public static responseQueue: string = 'patient-service';
+    public static routingKey : string = 'patient_management';
 
-    public static connect = async (): Promise<void> => {
-        try {
-            const conn = await amqplib.connect(URL_RABBITMQ);
-            const channel = await conn.createChannel();
+    public static connect = async (): Promise<Connection> => {
+        const maxRetries = 5;
+        const retryDelay = 5000;
+        let retries = 0;
 
-            RabbitMQAdapter.conn = conn;
-            RabbitMQAdapter.channel = channel;
-        } catch (err) {
-            console.error(err);
+        while (retries < maxRetries) {
+            try {
+                if (!RabbitMQAdapter.conn) {
+                    RabbitMQAdapter.conn = await amqplib.connect(URL_RABBITMQ);
+                }
+
+                return RabbitMQAdapter.conn;
+            } catch (err) {
+                retries++;
+                console.error(
+                    `Failed to connect to RabbitMQ. Attempt ${retries}/${maxRetries}`,
+                    err
+                );
+                if (retries >= maxRetries) {
+                    console.error('Max retries reached. Exiting...');
+                    process.exit(1);                }
+                await new Promise((resolve) => setTimeout(resolve, retryDelay));
+            }
         }
     };
 
     public static getChanel = async (): Promise<Channel> => {
         try {
             if (!RabbitMQAdapter.channel) {
-                await RabbitMQAdapter.connect();
+                RabbitMQAdapter.channel = await(await RabbitMQAdapter.connect()).createChannel();
             }
 
             return RabbitMQAdapter.channel;
