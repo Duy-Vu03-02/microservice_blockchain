@@ -8,24 +8,37 @@ import { IPatientsId, IPatientsNewHistory, IPatientsRegister, IPatientsReponse, 
 export class PatientsService {
     public static createPatients = async (user: IAuthUser, req: IPatientsRegister): Promise<IPatientsReponse> => {
         if (user && req) {
-            const { name, age, history } = req;
+            const { name, age, history, cccd } = req;
 
-            if (name && age) {
-                const patients = await PatientsModel.create({
-                    name,
-                    age,
-                    history,
+            if (name && age && cccd) {
+                const old_patient = await PatientsModel.findOne({
+                    cccd,
                 });
 
-                if (patients) {
-                    eventbus.emit(EventRegister.EVENT_CREATE_PATIENT, {
-                        admin_id: user.id,
-                        admin_name: user.name,
-                        user_id: patients._id,
-                        user_name: patients.name,
-                        action: "create patients"
+                if (old_patient) {
+                    throw new APIError({
+                        status: ErrorCode.AUTH_ACCOUNT_BLOCKED,
+                        errorCode: ErrorCode.AUTH_ACCOUNT_BLOCKED,
+                        message: 'Bnh nhan da ton tai',
                     });
-                    return patients.transform();
+                } else {
+                    const patients = await PatientsModel.create({
+                        name,
+                        age,
+                        history,
+                        cccd,
+                    });
+
+                    if (patients) {
+                        eventbus.emit(EventRegister.EVENT_CREATE_PATIENT, {
+                            admin_id: user.id,
+                            admin_name: user.name,
+                            user_id: patients._id,
+                            user_name: patients.name,
+                            action: 'create patients',
+                        });
+                        return patients.transform();
+                    }
                 }
             }
         }
@@ -86,8 +99,8 @@ export class PatientsService {
                     admin_id: user.id,
                     admin_name: user.name,
                     user_id: patients._id,
-                    user_name : patients.name,
-                    action: "update patients"
+                    user_name: patients.name,
+                    action: 'update patients',
                 });
                 return patients.transform();
             }
@@ -110,8 +123,8 @@ export class PatientsService {
                     admin_name: user.name,
                     user_id: req.id,
                     user_name: deleted.name ?? undefined,
-                    action: "delete patients"
-                })
+                    action: 'delete patients',
+                });
                 return true;
             }
         }
@@ -140,10 +153,10 @@ export class PatientsService {
             if (patient) {
                 eventbus.emit(EventRegister.EVENT_UPDATE_PATIENT, {
                     admin_id: user.id,
-                    admin_name : user.name,
-                    user_id : patient._id,
+                    admin_name: user.name,
+                    user_id: patient._id,
                     user_name: patient.name,
-                    action : "update history patient"
+                    action: 'update history patient',
                 });
                 return patient.transform();
             }
