@@ -19,6 +19,7 @@ export interface IAuthUser {
     id: string;
     name: string;
     role: UserRole;
+    hospital_id: string;
     token_id?: string;
     parent_token_id?: string;
 }

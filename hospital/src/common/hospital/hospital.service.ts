@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import crypto from 'crypto';
 import { IAuthUser } from '@common/auth/auth';
 import { APIError } from '@common/error/api.error';
 import { ErrorCode } from '@config/errors';
@@ -23,11 +23,17 @@ export class HospitalsService {
                         message: 'Da tton tai benh vien nay',
                     });
                 } else {
-                    const wallet = ethers.Wallet.createRandom();
-
-                    const privateKey = wallet.privateKey;
-                    const publicKey = wallet.address;
-
+                    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+                        modulusLength: 2048,
+                        publicKeyEncoding: {
+                            type: 'spki',
+                            format: 'pem',
+                        },
+                        privateKeyEncoding: {
+                            type: 'pkcs8',
+                            format: 'pem',
+                        },
+                    });
                     const hospital = await HospitalModel.create({
                         name,
                         phone,
