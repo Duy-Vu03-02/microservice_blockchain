@@ -94,10 +94,10 @@ export class DataShareController {
                         }
 
                         const buffreBase64 = Buffer.from(data.slice(2), 'hex');
-                        const decryptedData = DataShareController.decryptAndDecompress(
-                            buffreBase64,
-                            privateKey.toString(),
-                        );
+                        // const decryptedData = DataShareController.decryptAndDecompress(
+                        //     buffreBase64,
+                        //     privateKey.toString(),
+                        // );
                         // console.log(buffreBase64);
                         // const decryptedData = crypto.privateDecrypt(privateKey.toString(), buffreBase64);
                         // const decompressedData = zlib.gunzipSync(decryptedData).toString('utf-8');
