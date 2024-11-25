@@ -1,19 +1,18 @@
 import { Web3 } from 'web3';
 import fs from 'fs';
-import { ethers } from 'ethers';
+import path from "path"
 
 export class Web3Service {
     private static web3: Web3;
     private static constract;
-    private static provider = new ethers.JsonRpcProvider('http://127.0.0.1:7545');
     private static constractABI = JSON.parse(
         fs.readFileSync(
-            'C:\\Users\\PC\\Desktop\\Kì 7 năm 2024\\Mot So Cong Nghe\\microservice_blockchain\\data_share\\build\\contracts\\MedicalDataSharing.json',
+           path.join(__dirname ,  '../build/contracts/MedicalDataSharing.json'),
             'utf-8',
         ),
     ).abi;
 
-    private static constractAddress: string = '0x8F86F75a45df5712b8098E77620192a0C59F0b7B';
+    private static constractAddress: string = '0xF955019A0D39086A5469372E4ff7d58BE4c4daD2';
 
     public static getWeb3 = () => {
         if (!Web3Service.web3) {

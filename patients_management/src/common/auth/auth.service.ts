@@ -32,6 +32,7 @@ export class AuthService {
                             id: payload.id ?? undefined,
                             role: payload.role ?? undefined,
                             name: payload.name ?? undefined,
+                            hospital_id: payload.hospital_id ?? undefined,
                         };
 
                         return user;

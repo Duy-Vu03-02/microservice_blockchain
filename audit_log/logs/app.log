@@ -46,3 +46,5 @@
 {"level":"info","message":"Subscribe TOPIC patient_management SUCCESS","timestamp":"2024-11-23T08:58:22.762Z"}
 {"level":"info","message":"Subscribe TOPIC access_control SUCCESS","timestamp":"2024-11-23T08:58:53.589Z"}
 {"level":"info","message":"Subscribe TOPIC patient_management SUCCESS","timestamp":"2024-11-23T08:58:53.606Z"}
+{"level":"info","message":"Subscribe TOPIC access_control SUCCESS","timestamp":"2024-11-25T07:38:18.775Z"}
+{"level":"info","message":"Subscribe TOPIC patient_management SUCCESS","timestamp":"2024-11-25T07:38:18.783Z"}

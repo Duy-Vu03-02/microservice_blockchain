@@ -50,4 +50,4 @@ HospitalSchema.method({
     },
 });
 
-export const HospitalModel = mongoose.model<IHospital>('Patient', HospitalSchema);
+export const HospitalModel = mongoose.model<IHospital>('Hospital', HospitalSchema);

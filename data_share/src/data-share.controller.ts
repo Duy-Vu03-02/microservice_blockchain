@@ -12,6 +12,7 @@ export class DataShareController {
 
                 if (patient_data && patient_data.cccd && req.user.hospital_id) {
                     const hospital = (await HospitalModel.findById(req.user.hospital_id)).transform();
+                    
                     if (hospital) {
                         const publicKey = hospital.publicKey;
                         const base64_data = JSON.stringify(patient_data);
@@ -60,15 +61,18 @@ export class DataShareController {
     private static encryptAndCompress(data, publicKey: string) {
         const compressedData = zlib.gzipSync(data);
         const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(compressedData));
-        console.log(encryptedData);
-        return encryptedData;
+        return encryptedData.toString("base64");
     }
     private static decryptAndDecompress(encryptedData, privateKey: string) {
         try {
-            console.log(encryptedData);
-            const decryptedData = crypto.privateDecrypt(privateKey, encryptedData);
-            const decompressedData = zlib.gunzipSync(decryptedData).toString('utf-8');
-            return decompressedData;
+            const result = encryptedData.map((item) => {
+                const deBase64 = Buffer.from(item.base64EncryptedData, "base64");
+                const decode = crypto.privateDecrypt(privateKey.toString(),deBase64);
+                const decompressedData = zlib.gunzipSync(decode).toString('utf-8');
+                return JSON.parse(decompressedData);
+            })
+            
+            return result;
         } catch (err) {
             console.error(err);
         }
@@ -85,6 +89,7 @@ export class DataShareController {
                     if (privateKey) {
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
+                       
                         const data = await Web3Service.getConstract()
                             .methods.getData(patient_cccd)
                             .call({ from: account });
@@ -93,21 +98,11 @@ export class DataShareController {
                             throw new Error('Khong ton tai du lieu nay');
                         }
 
-                        const buffreBase64 = Buffer.from(data.slice(2), 'hex');
-                        // const decryptedData = DataShareController.decryptAndDecompress(
-                        //     buffreBase64,
-                        //     privateKey.toString(),
-                        // );
-                        // console.log(buffreBase64);
-                        // const decryptedData = crypto.privateDecrypt(privateKey.toString(), buffreBase64);
-                        // const decompressedData = zlib.gunzipSync(decryptedData).toString('utf-8');
-                        // console.log(decryptedData);
-
-                        // console.log(decompressedData);
+                       const result = this.decryptAndDecompress(data, privateKey.toString());
 
                         res.json({
                             messgae: 'Da tim thay du lieu',
-                            data: data,
+                            data: result,
                         });
                         res.status(200);
                         res.end();
