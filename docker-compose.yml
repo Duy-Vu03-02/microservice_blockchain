@@ -12,8 +12,15 @@ services:
     networks:
       - my-network
 
+  ganache:
+    image: trufflesuite/ganache-cli
+    ports:
+      - "8545:8545"
+    networks:
+      - ganache-network
+
   mongodb:
-    image: mongo:6.0 
+    image: mongo:6.0
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -57,7 +64,7 @@ services:
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
       - my-network
-  
+
   hospital:
     image: vu0203/node-microservice-notification
     ports:
@@ -69,7 +76,7 @@ services:
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
       - my-network
-  
+
   patients-management:
     image: vu0203/node-microservice-notification
     ports:
@@ -81,11 +88,13 @@ services:
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
       - my-network
-      
+
 volumes:
   mongo-data:
   rabbitmq-data:
 
 networks:
   my-network:
-     driver: overlay
+    driver: overlay
+  ganache-network:
+    driver: overlay
