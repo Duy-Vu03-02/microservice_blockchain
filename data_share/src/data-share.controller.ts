@@ -48,10 +48,10 @@ export class DataShareController {
 
                         eventbus.emit(EventRegister.EVENT_SHARE_DATA, {
                             admin_id: req.user.id,
-                            admin_name : req.user.name,
-                            patient_cccd: patient_data.cccd, 
+                            admin_name: req.user.name,
+                            patient_cccd: patient_data.cccd,
                             hospital_id: req.user.hospital_id,
-                        })
+                        });
                         return;
                     }
                 }
@@ -99,6 +99,7 @@ export class DataShareController {
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
 
+                        // xem lại chỗ này lấy getRecoreByAddress trong smartContract
                         const data = await Web3Service.getConstract()
                             .methods.getData(patient_cccd)
                             .call({ from: account });
@@ -118,10 +119,10 @@ export class DataShareController {
 
                         eventbus.emit(EventRegister.EVENT_RECEIVE_DATA, {
                             admin_id: req.user.id,
-                            admin_name : req.user.name,
-                            patient_cccd: patient_cccd, 
+                            admin_name: req.user.name,
+                            patient_cccd: patient_cccd,
                             hospital_id: req.user.hospital_id,
-                        })
+                        });
                         return;
                     }
                 }
