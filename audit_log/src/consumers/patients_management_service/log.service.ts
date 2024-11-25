@@ -21,13 +21,12 @@ export class PatientManagementLLog {
                     "'" +
                     ' - ACTION : ' +
                     data.action +
-                    ' cho user co id = ' +
+                    ' cho USER co id = ' +
                     data.user_id +
                     ' - co ten = ' +
                     "'" +
                     data.user_name +
                     "'";
-                console.log(logInfor);
                 PatientManagementLLog.logger.info(logInfor);
             },
         );

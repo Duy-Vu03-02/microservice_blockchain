@@ -1,11 +1,11 @@
-import { URL_RABBITMQ } from '@config/environment';
+import { URL_RABBITMQ } from './database.adapter';
 import amqplib, { Channel, Connection } from 'amqplib';
 
 export class RabbitMQAdapter {
     private static conn: Connection;
     private static channel: Channel;
     public static nameExchange: string = 'exchange_microservice';
-    public static routingKey : string = 'hospital';
+    public static routingKey : string = 'data_share';
 
     public static connect = async (): Promise<Connection> => {
         const maxRetries = 5;
@@ -17,7 +17,7 @@ export class RabbitMQAdapter {
                 if (!RabbitMQAdapter.conn) {
                     RabbitMQAdapter.conn = await amqplib.connect(URL_RABBITMQ);
                 }
-
+                
                 return RabbitMQAdapter.conn;
             } catch (err) {
                 retries++;
@@ -35,8 +35,8 @@ export class RabbitMQAdapter {
 
     public static getChanel = async (): Promise<Channel> => {
         try {
-            if (!RabbitMQAdapter.channel) {
-                RabbitMQAdapter.channel = await(await RabbitMQAdapter.connect()).createChannel();
+            if(!RabbitMQAdapter.channel){
+                RabbitMQAdapter.channel = await (await RabbitMQAdapter.connect()).createChannel();
             }
 
             return RabbitMQAdapter.channel;
@@ -55,8 +55,10 @@ export class RabbitMQAdapter {
             if (RabbitMQAdapter.conn) {
                 await RabbitMQAdapter.conn.close();
             }
+
+            console.log('Close MQTT SUCCESS');
         } catch (err) {
-            console.error('CANNOT close MQTT: ', err);
+            console.error('Cannot close MQTT: ', err);
         }
     };
 }

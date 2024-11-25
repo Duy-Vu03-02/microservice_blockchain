@@ -91,7 +91,6 @@ export class HospitalController {
 
     public static deleteHospital = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            console.log(req.user);
             const deleted: boolean = await HospitalsService.deleteHospital(
                 req.user,
                 req.params as unknown as IHospitalId,

@@ -1,7 +1,6 @@
 import { PORT } from '@config/environment';
 import { ExpressServer } from '@api/server';
 import { DatabaseAdapter } from '@common/infrastructure/database.adapter';
-import { RedisAdapter } from '@common/infrastructure/redis.adapter';
 import { EventRegister } from '@common/event/event';
 import { RabbitMQAdapter } from '@common/infrastructure/rabbitmq.adapter';
 

@@ -1,8 +1,10 @@
+import eventbus from './event';
 import express, { Request, Response, NextFunction } from 'express';
 import { HospitalModel } from './hospital';
 import crypto from 'crypto';
 import { Web3Service } from './web3';
 import zlib from 'zlib';
+import { EventRegister } from './event';
 
 export class DataShareController {
     public static shareData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -12,7 +14,7 @@ export class DataShareController {
 
                 if (patient_data && patient_data.cccd && req.user.hospital_id) {
                     const hospital = (await HospitalModel.findById(req.user.hospital_id)).transform();
-                    
+
                     if (hospital) {
                         const publicKey = hospital.publicKey;
                         const base64_data = JSON.stringify(patient_data);
@@ -43,6 +45,13 @@ export class DataShareController {
                         });
                         res.status(200);
                         res.end();
+
+                        eventbus.emit(EventRegister.EVENT_SHARE_DATA, {
+                            admin_id: req.user.id,
+                            admin_name : req.user.name,
+                            patient_cccd: patient_data.cccd, 
+                            hospital_id: req.user.hospital_id,
+                        })
                         return;
                     }
                 }
@@ -61,17 +70,17 @@ export class DataShareController {
     private static encryptAndCompress(data, publicKey: string) {
         const compressedData = zlib.gzipSync(data);
         const encryptedData = crypto.publicEncrypt(publicKey, Buffer.from(compressedData));
-        return encryptedData.toString("base64");
+        return encryptedData.toString('base64');
     }
     private static decryptAndDecompress(encryptedData, privateKey: string) {
         try {
             const result = encryptedData.map((item) => {
-                const deBase64 = Buffer.from(item.base64EncryptedData, "base64");
-                const decode = crypto.privateDecrypt(privateKey.toString(),deBase64);
+                const deBase64 = Buffer.from(item.base64EncryptedData, 'base64');
+                const decode = crypto.privateDecrypt(privateKey.toString(), deBase64);
                 const decompressedData = zlib.gunzipSync(decode).toString('utf-8');
                 return JSON.parse(decompressedData);
-            })
-            
+            });
+
             return result;
         } catch (err) {
             console.error(err);
@@ -89,7 +98,7 @@ export class DataShareController {
                     if (privateKey) {
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
-                       
+
                         const data = await Web3Service.getConstract()
                             .methods.getData(patient_cccd)
                             .call({ from: account });
@@ -98,7 +107,7 @@ export class DataShareController {
                             throw new Error('Khong ton tai du lieu nay');
                         }
 
-                       const result = this.decryptAndDecompress(data, privateKey.toString());
+                        const result = this.decryptAndDecompress(data, privateKey.toString());
 
                         res.json({
                             messgae: 'Da tim thay du lieu',
@@ -106,6 +115,13 @@ export class DataShareController {
                         });
                         res.status(200);
                         res.end();
+
+                        eventbus.emit(EventRegister.EVENT_RECEIVE_DATA, {
+                            admin_id: req.user.id,
+                            admin_name : req.user.name,
+                            patient_cccd: patient_cccd, 
+                            hospital_id: req.user.hospital_id,
+                        })
                         return;
                     }
                 }
@@ -113,7 +129,7 @@ export class DataShareController {
 
             throw new Error('Khong tha nan data');
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.json({
                 message: 'That bai khoong the receive data',
             });

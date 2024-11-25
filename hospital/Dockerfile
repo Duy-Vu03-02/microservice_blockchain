@@ -10,7 +10,7 @@ COPY . .
 
 RUN yarn run build
 
-EXPOSE 3002
+EXPOSE 6004
 
 COPY ./wait-for-it.sh /usr/local/bin/wait-for-it
 

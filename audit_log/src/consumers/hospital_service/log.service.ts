@@ -1,16 +1,16 @@
 import { createLogger } from '@common/infrastructure/logger';
 import { RabbitMQAdapter } from '@common/infrastructure/rabbitmq.adapter';
 
-export class AccessControlLog {
-    private static nameService: string = 'access-control';
-    private static logger = createLogger(AccessControlLog.nameService);
+export class HospitalLLog {
+    private static nameService: string = 'hospital-service';
+    private static logger = createLogger(HospitalLLog.nameService);
     private static nameExchange: string = 'exchange_microservice';
-    private static routingKey: string = 'access_control';
+    private static routingKey: string = 'hospital';
 
     public static register = async () => {
         await RabbitMQAdapter.subscribeTopic(
-            AccessControlLog.nameExchange,
-            AccessControlLog.routingKey,
+            HospitalLLog.nameExchange,
+            HospitalLLog.routingKey,
             (data: any) => {
                 const logInfor =
                     'ADMIN co id = ' +
@@ -21,15 +21,13 @@ export class AccessControlLog {
                     "'" +
                     ' - ACTION : ' +
                     data.action +
-                    ' cho USER co id = ' +
+                    ' cho BENH VIEN co id = ' +
                     data.user_id +
                     ' - co ten = ' +
                     "'" +
                     data.user_name +
-                    "'" +
-                    ' voi ROLE moi = ' +
-                    data.role;
-                AccessControlLog.logger.info(logInfor);
+                    "'";
+                HospitalLLog.logger.info(logInfor);
             },
         );
     };

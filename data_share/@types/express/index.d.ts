@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { IAuthUser } from "@common/auth/auth";
+import { IAuthUser } from "../../src/auth/auth.middleware";
 
 declare global {
   namespace Express {

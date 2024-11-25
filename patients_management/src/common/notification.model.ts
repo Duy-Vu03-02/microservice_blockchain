@@ -1,4 +1,3 @@
-import { NotificationController } from "./api/notification.controler";
 import mongoose, { Schema } from "mongoose";
 
 const NotificationSchema = new Schema({

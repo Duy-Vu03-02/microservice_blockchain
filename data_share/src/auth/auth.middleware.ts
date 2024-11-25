@@ -1,6 +1,28 @@
 import express, { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { API_KEY } from '../database.adapter';
+import { API_KEY } from '../infrastructure/database.adapter';
+
+export interface ILoginRequest {
+    account: string;
+    password: string;
+}
+
+export enum UserRole {
+    USER = 'user',
+    PATIENT = 'patient',
+    DOCTOR = 'doctor',
+    SYS = 'system',
+    BHYT = 'bhyt',
+}
+
+export interface IAuthUser {
+    id: string;
+    name: string;
+    role: UserRole;
+    hospital_id: string;
+    token_id?: string;
+    parent_token_id?: string;
+}
 
 export class AuthMiddleware {
     public static loginByToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
