@@ -33,6 +33,7 @@ export class DataShareController {
                             gas: gas,
                             gasPrice: gasPrice,
                         });
+                        console.log(data);
 
                         res.json({
                             message: 'Chia se len blockchain thanh cong',
@@ -100,8 +101,7 @@ export class DataShareController {
                         const account = accounts[0];
 
                         // xem lại chỗ này lấy getRecoreByAddress trong smartContract
-                        const datas = await Web3Service.getConstract().methods.getRecordsByAddress(patient_cccd, hospital.transform().id).call({from: account});
-                        console.log(datas);
+                        const datas = await Web3Service.getConstract().methods.getRecordsByAddress(patient_cccd, hospital.transform().id).call({from: account, gas: 6000000});
 
                         if (datas?.length <= 0) {
                             throw new Error('Khong ton tai du lieu nay');
