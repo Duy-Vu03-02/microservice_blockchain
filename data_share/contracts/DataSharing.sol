@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 contract MedicalDataSharing {
     struct PatientData {
         address hospital;
+        string hospital_id;
         string base64EncryptedData;
     }
 
@@ -10,9 +11,10 @@ contract MedicalDataSharing {
 
     event DataShared(string patientCccd, address indexed hospital);
 
-    function shareData(string memory patientCccd, string memory base64EncryptedData) public {
+    function shareData(string memory patientCccd, string memory hospital_id, string memory base64EncryptedData) public {
         PatientData memory newRecord = PatientData({
             hospital: msg.sender,
+            hospital_id: hospital_id,
             base64EncryptedData: base64EncryptedData
         });
 
@@ -24,12 +26,15 @@ contract MedicalDataSharing {
         return patientRecords[patientCccd];
     }
 
-    function getRecordsByAddress(string memory patientCccd, address hospital) public view returns (string[] memory) {
+    function getRecordsByAddress(
+        string memory patientCccd,
+        string memory hospital_id
+    ) public view returns (string[] memory) {
         PatientData[] memory records = patientRecords[patientCccd];
-        
+
         uint count = 0;
         for (uint i = 0; i < records.length; i++) {
-            if (records[i].hospital == hospital) {
+            if (keccak256(abi.encodePacked(records[i].hospital_id)) == keccak256((abi.encodePacked((hospital_id))))) {
                 count++;
             }
         }
@@ -37,7 +42,7 @@ contract MedicalDataSharing {
         string[] memory matchedRecords = new string[](count);
         uint index = 0;
         for (uint i = 0; i < records.length; i++) {
-            if (records[i].hospital == hospital) {
+            if (keccak256(abi.encodePacked(records[i].hospital_id)) == keccak256((abi.encodePacked((hospital_id))))) {
                 matchedRecords[index] = records[i].base64EncryptedData;
                 index++;
             }

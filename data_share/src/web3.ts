@@ -12,7 +12,7 @@ export class Web3Service {
         ),
     ).abi;
 
-    private static constractAddress: string = '0xF955019A0D39086A5469372E4ff7d58BE4c4daD2';
+    private static constractAddress: string = '0x8254Bba42e34c3812D30F008be7BdEA251Fa5eCC';
 
     public static getWeb3 = () => {
         if (!Web3Service.web3) {

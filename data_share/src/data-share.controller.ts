@@ -22,7 +22,7 @@ export class DataShareController {
 
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
-                        const transaction = Web3Service.getConstract().methods.shareData(patient_data.cccd, encode);
+                        const transaction = Web3Service.getConstract().methods.shareData(patient_data.cccd, hospital.id,encode);
 
                         const gas = await transaction.estimateGas({ from: account });
 
@@ -75,7 +75,7 @@ export class DataShareController {
     private static decryptAndDecompress(encryptedData, privateKey: string) {
         try {
             const result = encryptedData.map((item) => {
-                const deBase64 = Buffer.from(item.base64EncryptedData, 'base64');
+                const deBase64 = Buffer.from(item, 'base64');
                 const decode = crypto.privateDecrypt(privateKey.toString(), deBase64);
                 const decompressedData = zlib.gunzipSync(decode).toString('utf-8');
                 return JSON.parse(decompressedData);
@@ -100,15 +100,14 @@ export class DataShareController {
                         const account = accounts[0];
 
                         // xem lại chỗ này lấy getRecoreByAddress trong smartContract
-                        const data = await Web3Service.getConstract()
-                            .methods.getData(patient_cccd)
-                            .call({ from: account });
+                        const datas = await Web3Service.getConstract().methods.getRecordsByAddress(patient_cccd, hospital.transform().id).call({from: account});
+                        console.log(datas);
 
-                        if (!data || data === '0x') {
+                        if (datas?.length <= 0) {
                             throw new Error('Khong ton tai du lieu nay');
                         }
 
-                        const result = this.decryptAndDecompress(data, privateKey.toString());
+                        const result = DataShareController.decryptAndDecompress(datas, privateKey.toString());
 
                         res.json({
                             messgae: 'Da tim thay du lieu',
