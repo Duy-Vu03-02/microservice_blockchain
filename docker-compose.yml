@@ -10,27 +10,31 @@ services:
     volumes:
       - rabbitmq-data:/data/rabbitmq
     networks:
-      - my-network
+      - microservice-blockchain
 
   ganache:
-    image: trufflesuite/ganache-cli
+    image: trufflesuite/ganache
     ports:
       - "8545:8545"
+    restart: unless-stopped
+    command:
+      - --accounts=10
+      - --defaultBalanceEther=100
     networks:
-      - ganache-network
+      - microservice-blockchain
 
   mongodb:
-    image: mongo:6.0
+    image: mongo:6.0 
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
     networks:
-      - my-network
+      - microservice-blockchain
 
   access-control:
-    image: vu0203/node-microservice-user
+    image: khalisvu/access-control
     ports:
       - "6001:6001"
     restart: unless-stopped
@@ -39,10 +43,10 @@ services:
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
-      - my-network
+      - microservice-blockchain
 
   audit-log:
-    image: vu0203/node-microservice-chat
+    image: khalisvu/audit-log
     ports:
       - "6002:6002"
     restart: unless-stopped
@@ -51,10 +55,10 @@ services:
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
-      - my-network
+      - microservice-blockchain
 
   data-share:
-    image: vu0203/node-microservice-notification
+    image: khalisvu/data-share
     ports:
       - "6003:6003"
     restart: unless-stopped
@@ -62,11 +66,13 @@ services:
       - PORT=6003
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
+      - BUILD_URL= /usr/local/bin/MedicalDataSharing.json
+      - GANACHE_URL= ganache://ganche:8545
     networks:
-      - my-network
+      - microservice-blockchain
 
   hospital:
-    image: vu0203/node-microservice-notification
+    image: khalisvu/hospital
     ports:
       - "6004:6004"
     restart: unless-stopped
@@ -75,10 +81,10 @@ services:
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
-      - my-network
+      - microservice-blockchain
 
-  patients-management:
-    image: vu0203/node-microservice-notification
+  patients_management:
+    image: khalisvu/patients_management
     ports:
       - "6005:6005"
     restart: unless-stopped
@@ -87,14 +93,13 @@ services:
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
     networks:
-      - my-network
+      - microservice-blockchain
+
 
 volumes:
   mongo-data:
   rabbitmq-data:
 
 networks:
-  my-network:
-    driver: overlay
-  ganache-network:
-    driver: overlay
+  microservice-blockchain:
+    extend: true

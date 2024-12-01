@@ -1,12 +1,13 @@
 import { Web3 } from 'web3';
 import fs from 'fs';
 import path from "path"
+import { BUILD_URL, GANACHE_URL } from './infrastructure/database.adapter';
 
 export class Web3Service {
     private static web3: Web3;
     private static constract;
     private static constractABI = JSON.parse(
-        fs.readFileSync(
+        fs.readFileSync( BUILD_URL ||
            path.join(__dirname ,  '../build/contracts/MedicalDataSharing.json'),
             'utf-8',
         ),
@@ -16,7 +17,7 @@ export class Web3Service {
 
     public static getWeb3 = () => {
         if (!Web3Service.web3) {
-            Web3Service.web3 = new Web3('http://127.0.0.1:7545');
+            Web3Service.web3 = new Web3(GANACHE_URL ||'http://127.0.0.1:7545');
         }
         return Web3Service.web3;
     };
