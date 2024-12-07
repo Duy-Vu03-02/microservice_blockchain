@@ -1,2 +1,3 @@
 {"level":"info","message":"ADMIN co id = 67405b139922b1bae657295b - co ten = 'ngao da top 1' - ACTION : create hospital cho user co id = 67442ced998eec3c8ebac85b - co ten = 'Benh vien A'","timestamp":"2024-11-25T07:53:17.480Z"}
 {"level":"info","message":"ADMIN co id = 67405b139922b1bae657295b - co ten = 'ngao da top 1' - ACTION : create hospital cho user co id = 67444755c7423713547ae4ca - co ten = 'Benh vien C'","timestamp":"2024-11-25T09:45:58.030Z"}
+{"level":"info","message":"ADMIN co id = 6753a283bef929b816a864f9 - co ten = 'day la so 1' - ACTION : create patient cho USER co id = 6753a45aeab9f7a19ec5d787 - co ten = 'benh nhan1'","timestamp":"2024-12-07T01:26:50.681Z"}

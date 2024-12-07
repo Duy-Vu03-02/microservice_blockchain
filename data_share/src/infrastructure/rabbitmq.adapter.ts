@@ -56,7 +56,7 @@ export class RabbitMQAdapter {
                 await RabbitMQAdapter.conn.close();
             }
 
-            console.log('Close MQTT SUCCESS');
+            console.log('Close rabbitmq SUCCESS');
         } catch (err) {
             console.error('Cannot close MQTT: ', err);
         }

@@ -138,3 +138,7 @@
 {"level":"info","message":"Subscribe TOPIC patient_management SUCCESS","timestamp":"2024-11-25T10:13:46.589Z"}
 {"level":"info","message":"Subscribe TOPIC data_share SUCCESS","timestamp":"2024-11-25T10:13:46.599Z"}
 {"level":"info","message":"Subscribe TOPIC hospital SUCCESS","timestamp":"2024-11-25T10:13:46.606Z"}
+{"level":"info","message":"Subscribe TOPIC access_control SUCCESS","timestamp":"2024-12-07T01:14:10.294Z"}
+{"level":"info","message":"Subscribe TOPIC patient_management SUCCESS","timestamp":"2024-12-07T01:14:10.320Z"}
+{"level":"info","message":"Subscribe TOPIC data_share SUCCESS","timestamp":"2024-12-07T01:14:10.344Z"}
+{"level":"info","message":"Subscribe TOPIC hospital SUCCESS","timestamp":"2024-12-07T01:14:10.367Z"}

@@ -1,4 +1,3 @@
-version: "3.8"
 
 services:
   rabbitmq:
@@ -24,7 +23,7 @@ services:
       - microservice-blockchain
 
   mongodb:
-    image: mongo:6.0 
+    image: mongo:6.0
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -66,8 +65,8 @@ services:
       - PORT=6003
       - URL_MONGO=mongodb://mongodb:27017/user-service
       - URL_RABBITMQ=amqp://rabbitmq:5672
-      - BUILD_URL= /usr/local/bin/MedicalDataSharing.json
-      - GANACHE_URL= ganache://ganche:8545
+      - BUILD_URL=/usr/local/bin/MedicalDataSharing.json
+      - GANACHE_URL=http://ganache:8545
     networks:
       - microservice-blockchain
 
@@ -102,4 +101,4 @@ volumes:
 
 networks:
   microservice-blockchain:
-    extend: true
+    driver: bridge

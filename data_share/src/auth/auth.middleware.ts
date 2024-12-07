@@ -28,7 +28,6 @@ export class AuthMiddleware {
     public static loginByToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const HEADER_AUTH = 'x-header-auth';
-
             const token = req.header(HEADER_AUTH);
 
             try {

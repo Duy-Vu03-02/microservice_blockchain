@@ -33,7 +33,6 @@ export class DataShareController {
                             gas: gas,
                             gasPrice: gasPrice,
                         });
-                        console.log(data);
 
                         res.json({
                             message: 'Chia se len blockchain thanh cong',
