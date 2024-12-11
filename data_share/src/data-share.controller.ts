@@ -22,7 +22,7 @@ export class DataShareController {
 
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
-                        const transaction = Web3Service.getConstract().methods.shareData(patient_data.cccd, hospital.id,encode);
+                        const transaction = Web3Service.getContract().methods.shareData(patient_data.cccd, hospital.id,encode);
 
                         const gas = await transaction.estimateGas({ from: account });
 
@@ -99,8 +99,7 @@ export class DataShareController {
                         const accounts = await Web3Service.getAccounts();
                         const account = accounts[0];
 
-                        // xem lại chỗ này lấy getRecoreByAddress trong smartContract
-                        const datas = await Web3Service.getConstract().methods.getRecordsByAddress(patient_cccd, hospital.transform().id).call({from: account, gas: 6000000});
+                        const datas = await Web3Service.getContract().methods.getRecordsByAddress(patient_cccd, hospital.transform().id).call({from: account, gas: 6000000});
 
                         if (datas?.length <= 0) {
                             throw new Error('Khong ton tai du lieu nay');

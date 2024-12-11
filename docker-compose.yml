@@ -18,7 +18,9 @@ services:
     restart: unless-stopped
     command:
       - --accounts=10
-      - --defaultBalanceEther=100
+      - --defaultBalanceEther=1000000
+      - --gasLimit=8000000
+      - --gasPrice=20000000000
     networks:
       - microservice-blockchain
 

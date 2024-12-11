@@ -42,7 +42,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -81,7 +82,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -125,7 +127,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -149,7 +152,8 @@
         }
       ],
       "stateMutability": "pure",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -196,7 +200,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"patientCccd\",\"type\":\"string\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"hospital\",\"type\":\"address\"}],\"name\":\"DataShared\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"blockChains\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"hospital\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"hospitalId\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"base64EncryptedData\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"prevHash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"name\":\"calculateHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"patientCccd\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"hospitalId\",\"type\":\"string\"}],\"name\":\"getRecordsByAddress\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"\",\"type\":\"string[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"}],\"name\":\"isValidDifficulty\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"difficulty\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"hospital\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"hospitalId\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"base64EncryptedData\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"prevHash\",\"type\":\"bytes32\"}],\"name\":\"mineBlock\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"patientCccd\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"hospitalId\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"base64EncryptedData\",\"type\":\"string\"}],\"name\":\"shareData\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/DataSharing.sol\":\"MedicalDataSharing\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/DataSharing.sol\":{\"keccak256\":\"0xf4322b094a905830ebb02c733a6760fa734284412a6a4c89671bacc413f9101b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4736bdbc986cc6f1b0dcbd43e3e0ea6cdc3d8a7c9a36e2984330f4ab907dd877\",\"dweb:/ipfs/Qma15EgDW7yJpeM5eKwXzJ56Ejed1kGXFrqHShbjhpvngj\"]}},\"version\":1}",
@@ -14840,9 +14845,17 @@
     "name": "solc",
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x2e4569447374558E7348E730C8558c23E6E02852",
+      "transactionHash": "0x50eb357fef265f6c28a595ee376c879c300261b023b89cd47fcad62fc146e1d5"
+    }
+  },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-12-07T02:58:03.380Z",
+  "updatedAt": "2024-12-11T01:30:30.000Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

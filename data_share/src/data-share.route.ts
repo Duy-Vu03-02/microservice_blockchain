@@ -9,20 +9,4 @@ router.post('/share-data', AuthMiddleware.loginByToken, DataShareController.shar
 
 router.post('/receive-data', AuthMiddleware.loginByToken, DataShareController.receiveData);
 
-router.post("/set-address-constract", AuthMiddleware.loginByToken, (req: Request, res: Response) => {
-    const {address } = req.body;
-    
-    if(address){
-        Web3Service.constractAddress = address;
-        res.json({message: "Success", address: Web3Service.constractAddress});
-        res.status(200);
-        res.end();
-        return;
-    }
-    res.json({message: "ERROR"});
-    res.status(404);
-    res.end();
-    return;
-})
-
 export default router;
