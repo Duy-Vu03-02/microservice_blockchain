@@ -1,0 +1,106 @@
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - rabbitmq-data:/data/rabbitmq
+    networks:
+      - microservice-blockchain
+
+  ganache:
+    image: trufflesuite/ganache
+    ports:
+      - "8545:8545"
+    restart: unless-stopped
+    command:
+      - --accounts=10
+      - --defaultBalanceEther=1000000
+      - --gasLimit=8000000
+      - --gasPrice=20000000000
+    networks:
+      - microservice-blockchain
+
+  mongodb:
+    image: mongo:6.0
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - microservice-blockchain
+
+  access-control:
+    image: khalisvu/access-control
+    ports:
+      - "6001:6001"
+    restart: unless-stopped
+    environment:
+      - PORT=6001
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - microservice-blockchain
+
+  audit-log:
+    image: khalisvu/audit-log
+    ports:
+      - "6002:6002"
+    restart: unless-stopped
+    environment:
+      - PORT=6002
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - microservice-blockchain
+
+  data-share:
+    image: khalisvu/data-share
+    ports:
+      - "6003:6003"
+    restart: unless-stopped
+    environment:
+      - PORT=6003
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+      - BUILD_URL=/usr/local/bin/MedicalDataSharing.json
+      - GANACHE_URL=http://ganache:8545
+    networks:
+      - microservice-blockchain
+
+  hospital:
+    image: khalisvu/hospital
+    ports:
+      - "6004:6004"
+    restart: unless-stopped
+    environment:
+      - PORT=6004
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - microservice-blockchain
+
+  patients_management:
+    image: khalisvu/patients_management
+    ports:
+      - "6005:6005"
+    restart: unless-stopped
+    environment:
+      - PORT=6005
+      - URL_MONGO=mongodb://mongodb:27017/user-service
+      - URL_RABBITMQ=amqp://rabbitmq:5672
+    networks:
+      - microservice-blockchain
+
+
+volumes:
+  mongo-data:
+  rabbitmq-data:
+
+networks:
+  microservice-blockchain:
+    driver: bridge
