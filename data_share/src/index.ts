@@ -10,7 +10,7 @@ export class Application {
     public static register = async () => {
         await Web3Service.register();
         await DatabaseAdapter.connect();
-        // await RabbitMQAdapter.connect();
+        await RabbitMQAdapter.connect();
 
         const app = express();
         app.use(bodyParser.json());
